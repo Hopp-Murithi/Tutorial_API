@@ -1,0 +1,1 @@
+//Defines logic about the server
