@@ -1,5 +1,6 @@
 {
     "values": {
-        "url": "http://localhost:3000/"
+        "url": "http://localhost:3000/",
+        "DB_LOCAL_URI": "mongodb://localhost:27017/"
     }
 }
