@@ -1,7 +1,13 @@
 //Defines logic about the server
-const express = require('express')
-const health = require('./routes/healthChecker.routes')
+const express = require('express');
+const health = require('./routes/healthChecker.routes');
+const dotenv = require('dotenv');
 const app = express();
+
+dotenv.config();
+
+require('./config/db')();
+
 
 app.use(express.json());
 
