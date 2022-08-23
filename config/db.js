@@ -1,4 +1,4 @@
-//Defines database configurationsconst mongoose = require('mongoose');
+//Defines database configurations
 const mongoose = require('mongoose')
 const connectDatabase = () => {
 
