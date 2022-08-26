@@ -9,15 +9,15 @@ const bcrypt = require('bcrypt');
 let mailer = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: USER_MAIL,
-        pass: USER_SECRET
+        user: process.env.USER_MAIL,
+        pass: process.env.USER_USER_SECRET
     }
 });
 
 let details = {
-    from: USER_MAIL,
+    from: process.env.USER_MAIL,
     to: user.email,
-    subject: `Welcome on board ${firstName}`,
+    subject: `Welcome on board`,
     text: 'Hi there and welcome'
 
 }
@@ -60,7 +60,7 @@ exports.users('', async(req, res) => {
 
         let User = new user(_.pick(req.body, ['firstName', 'lastName', 'email', 'phoneNumber', 'password']));
 
-        bcrypt.genSalt(10, (err, salt) => {
+        bcrypt.genSalt(10, async(err, salt) => {
             if (err) throw err;
             return user.password = await bcrypt.hash(user.password, salt);
         });
