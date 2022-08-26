@@ -1,6 +1,7 @@
 //Defines control logic for creating new users
 const user = require('../models/user');
 const { phone } = require('phone');
+const _ = require('lodash');
 
 
 exports.users('', async(req, res) => {
@@ -30,6 +31,7 @@ exports.users('', async(req, res) => {
         const phoneNumber = await user.find({ phoneNumber: req.body.phoneNumber });
         phone(phoneNumber.value);
 
+        let user = new user(_.pick(req.body, ['firstName', 'lastName', 'email', 'phoneNumber', 'password']));
 
 
     } catch (err) {}
