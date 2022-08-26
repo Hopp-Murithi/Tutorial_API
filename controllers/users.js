@@ -67,7 +67,9 @@ exports.users('', async(req, res) => {
         await User.save();
 
 
-    } catch (err) {}
+    } catch (err) {
+        res.status(500).send('Something went wrong', err);
+    }
 
 
 })
