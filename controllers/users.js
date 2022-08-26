@@ -1,5 +1,7 @@
 //Defines control logic for creating new users
 const user = require('../models/user');
+const { phone } = require('phone');
+
 
 exports.users('', async(req, res) => {
     try {
@@ -10,6 +12,7 @@ exports.users('', async(req, res) => {
         if (email) {
             res.send('Email already exists');
         };
+
         const firstName = await user.find({ firstName: req.body.firstName });
         if (firstName.length < 3 || firstName.length > 20) return
         res.send('First name must be at least 3 characters and less than 20 characters');;
@@ -18,9 +21,14 @@ exports.users('', async(req, res) => {
         res.send('Last name must be at least 3 characters and less than 20 characters')
 
         const password = await user.find({ password: req.body.password });
+        const confirmPassword = await user.find({ confirmPassword: req.body.confirmPassword });
         const filterPassword = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{5,15}$/;
-        if (!filterPassword.test(password.value)) return res.send('Password must include at least one lowercase letter, one uppercase letter, one digit, and one special character');
+        if (!filterPassword.test(password.value)) return
+        res.send('Password must include at least one lowercase letter, one uppercase letter, one digit, and one special character');
+        if (password.value !== confirmPassword.value) return res.send('Passwords do not match');
 
+        const phoneNumber = await user.find({ phoneNumber: req.body.phoneNumber });
+        phone(phoneNumber.value);
 
 
 
