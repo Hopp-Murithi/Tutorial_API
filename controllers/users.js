@@ -1,8 +1,34 @@
 //Defines control logic for creating new users
 const user = require('../models/user');
+const nodemailer = require('nodemailer');
 const { phone } = require('phone');
 const _ = require('lodash');
 const bcrypt = require('bcrypt');
+
+
+let mailer = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: USER_MAIL,
+        pass: USER_SECRET
+    }
+});
+
+let details = {
+    from: USER_MAIL,
+    to: user.email,
+    subject: `Welcome on board ${firstName}`,
+    text: 'Hi there and welcome'
+
+}
+mailer.sendMail(details, (err, info) => {
+    if (err) {
+        console.log(err);
+    } else {
+        console.log('email sent', info);
+    }
+})
+
 
 
 exports.users('', async(req, res) => {
