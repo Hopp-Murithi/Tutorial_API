@@ -28,6 +28,11 @@ const userSchema = new Schema({
         type: String,
         required: true,
         min: 5
+    },
+    confirmPassword: {
+        type: String,
+        required: true,
+        min: 5
     }
 });
 
