@@ -6,3 +6,5 @@ const { users } = require('../controllers/users');
 
 
 router.route('/users').post(users);
+
+module.exports = router;
