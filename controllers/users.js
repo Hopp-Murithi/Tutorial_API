@@ -2,6 +2,7 @@
 const user = require('../models/user');
 const { phone } = require('phone');
 const _ = require('lodash');
+const bcrypt = require('bcrypt');
 
 
 exports.users('', async(req, res) => {
@@ -31,7 +32,13 @@ exports.users('', async(req, res) => {
         const phoneNumber = await user.find({ phoneNumber: req.body.phoneNumber });
         phone(phoneNumber.value);
 
-        let user = new user(_.pick(req.body, ['firstName', 'lastName', 'email', 'phoneNumber', 'password']));
+        let User = new user(_.pick(req.body, ['firstName', 'lastName', 'email', 'phoneNumber', 'password']));
+
+        bcrypt.genSalt(10, (err, salt) => {
+            if (err) throw err;
+            return user.password = await bcrypt.hash(user.password, salt);
+        });
+
 
 
     } catch (err) {}
