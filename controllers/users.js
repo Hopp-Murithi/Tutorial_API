@@ -38,7 +38,7 @@ exports.users('', async(req, res) => {
             if (err) throw err;
             return user.password = await bcrypt.hash(user.password, salt);
         });
-
+        await User.save();
 
 
     } catch (err) {}
