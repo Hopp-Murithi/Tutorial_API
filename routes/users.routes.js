@@ -5,6 +5,6 @@ const router = express.Router();
 const { users } = require('../controllers/users');
 
 
-router.route('/users').post(users);
+router.post('/', users)
 
 module.exports = router;
