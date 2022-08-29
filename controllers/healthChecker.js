@@ -1,6 +1,5 @@
 //controller logic for server health check
-
-exports.health = async(req, res, _next) => {
+module.exports.health = async function(req, res, _next) {
     try {
         res.status(200).json({ message: "Server is running" })
     } catch (err) {
