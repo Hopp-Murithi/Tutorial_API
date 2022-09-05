@@ -4,6 +4,7 @@ const nodemailer = require('nodemailer');
 const { phone } = require('phone');
 const _ = require('lodash');
 const bcrypt = require('bcrypt');
+const emailVerifier = require('../common/verifier')
 
 
 let mailer = nodemailer.createTransport({
@@ -40,11 +41,12 @@ module.exports.users = async(req, res) => {
         const confirmPassword = await user.find({ confirmPassword: req.body.confirmPassword });
         const phoneNumber = await user.find({ phoneNumber: req.body.phoneNumber });
 
-        if (!email) return res.send('Email is required')
+        
 
         const filterEmail = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-        if (!filterEmail.test(email.value)) return
-        res.send('Please provide a valid email address');
+        
+        // This will perform all email checks
+        emailVerifier.verifyEmail(email);
         if (email) {
             res.send('Email already exists');
         };
