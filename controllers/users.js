@@ -1,7 +1,7 @@
 //Defines control logic for creating new users
 const user = require('../models/user');
 const nodemailer = require('nodemailer');
-const { phone } = require('phone');
+const verifier = require('../common/verifier')
 const _ = require('lodash');
 const bcrypt = require('bcrypt');
 
@@ -33,41 +33,20 @@ mailer.sendMail(details, (err, info) => {
 
 module.exports.users = async(req, res) => {
     try {
-        const email = await user.findOne({ email: req.body.email });
-        const firstName = await user.find({ firstName: req.body.firstName });
-        const lastName = await user.find({ lastName: req.body.lastName });
-        const password = await user.find({ password: req.body.password });
-        const confirmPassword = await user.find({ confirmPassword: req.body.confirmPassword });
-        const phoneNumber = await user.find({ phoneNumber: req.body.phoneNumber });
+        verifier.verifyEmail(email);
+        verifier.verifyFirstName(firstName);
+        verifier.verifyLastName(lastName);
+        verifier.verifyPassword(password, confirmPassword);
+        verifier.phoneNumber(phoneNumber);
 
-        if (!email) return res.send('Email is required')
 
-        const filterEmail = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-        if (!filterEmail.test(email.value)) return
-        res.send('Please provide a valid email address');
-        if (email) {
-            res.send('Email already exists');
-        };
+        let User = new user({
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            password: req.body.password,
+            phone: req.body.phoneNumber
 
-        if (!firstName) return res.send('First Name is required');
-        if (firstName.length < 3 || firstName.length > 20) return
-        res.send('First name must be at least 3 characters and less than 20 characters');;
-
-        if (!lastName) return res.send('Last Name is required');
-        if (lastName.length < 3 || lastName.length > 20) return
-        res.send('Last name must be at least 3 characters and less than 20 characters')
-
-        if (!password) return res.send('PassWord is required');
-        const filterPassword = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{5,15}$/;
-        if (!filterPassword.test(password.value)) return
-        res.send('Password must include at least one lowercase letter, one uppercase letter, one digit, and one special character');
-        if (!confirmPassword) return res.send(' Please confirm password');
-        if (password.value !== confirmPassword.value) return res.send('Passwords do not match');
-
-        if (!phoneNumber) return res.send('Phone Number is required');
-        phone(phoneNumber.value);
-
-        let User = new user(_.pick(req.body, ['firstName', 'lastName', 'email', 'phoneNumber', 'password']));
+        })
 
         bcrypt.genSalt(10, async(err, salt) => {
             if (err) throw err;
