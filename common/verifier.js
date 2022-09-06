@@ -49,6 +49,15 @@ module.exports = {
         if (password !== confirmPassword) {
             return res.status(417).json({ message: 'passwords do not match' })
         }
+    },
+    verifyPhone: (phoneNumber) => {
+        if (!phoneNumber) {
+            return res.status(404).json({ message: 'Phone number is required' })
+        }
+        let phoneRegex = /^\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/
+        if (!phoneNumber.match(phoneRegex)) {
+            return res.status(400).json({ message: 'Please add a valid phone number' })
+        }
     }
 
 }
