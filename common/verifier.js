@@ -18,6 +18,22 @@ module.exports = {
             return res.status(400).json({ message: 'User already exists' })
         }
 
+    },
+    verifyFirstName: (firstName) => {
+        if (!firstName) {
+            return res.status(404).json({ message: 'First name is required' });
+        }
+        if (firstName.length < 3 || firstName.length > 20) {
+            return res.status(411).json({ message: 'length must be between 3 and 20 characters' });
+        }
+    },
+    verifyLastName: (lastName) => {
+        if (!lastName) {
+            return res.status(404).json({ message: 'First name is required' });
+        }
+        if (lastName.length < 3 || lastName.length > 20) {
+            return res.status(411).json({ message: 'length must be between 3 and 20 characters' });
+        }
     }
 
 }
