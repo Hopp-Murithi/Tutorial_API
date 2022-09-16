@@ -12,12 +12,27 @@ module.exports.users = async(req, res) => {
     try {
         const { email, firstName, lastName, password, confirmPassword, phoneNumber } = req.body
 
-        verifier.verifyEmail(email);
-        verifier.verifyFirstName(firstName);
-        verifier.verifyLastName(lastName);
-        verifier.verifyPassword(password, confirmPassword);
-        verifier.verifyPhone(phoneNumber);
 
+        let emailValidation = verifier.verifyEmail(email);
+        if (emailValidation.status === 404 || emailValidation.status === 400) {
+            res.status(emailValidation.status).json({ message: emailValidation.message });
+        }
+        let firstNameValidation = verifier.verifyFirstName(firstName);
+        if (firstNameValidation.status === 404 || firstNameValidation.status === 411) {
+            res.status(firstNameValidation.status).json({ message: firstNameValidation.message });
+        }
+        let lastNameValidation = verifier.verifyLastName(lastName);
+        if (lastNameValidation.status === 404 || lastNameValidation.status === 411) {
+            res.status(lastNameValidation.status).json({ message: lastNameValidation.message });
+        }
+        let passwordValidation = verifier.verifyPassword(password, confirmPassword);
+        if (passwordValidation.status === 404 || passwordValidation.status === 411) {
+            res.status(passwordValidation.status).json({ message: passwordValidation.message });
+        }
+        let phoneValidation = verifier.verifyPhone(phoneNumber);
+        if (phoneValidation.status === 404 || phoneValidation === 400) {
+            res.status(phoneValidation.status).json({ message: phoneValidation.message });
+        }
 
         let User = new user({
             firstName: req.body.firstName,
