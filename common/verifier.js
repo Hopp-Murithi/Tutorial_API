@@ -2,7 +2,9 @@
 
 const user = require('../models/user');
 
+
 module.exports = {
+
     verifyEmail: async(email) => {
         if (!email) {
             return {
@@ -107,7 +109,10 @@ module.exports = {
         }
         let phoneRegex = /^\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/
         if (!phoneNumber.match(phoneRegex)) {
-            return { status: 400, message: 'Please add a valid phone number' }
+            return {
+                status: 400,
+                message: 'Please add a valid phone number'
+            }
 
 
         }

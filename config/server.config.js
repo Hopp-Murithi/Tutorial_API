@@ -1,5 +1,5 @@
 //Defines all routes to load onto server(code refactoring)
-const health = require('../routes/healthChecker.routes');
+const health = require('../routes/health.routes');
 const users = require('../routes/users.routes');
 const express = require('express');
 
