@@ -1,7 +1,7 @@
 //Defines control logic for creating new users
 const User = require('../models/user');
 const nodemailer = require('nodemailer');
-const verifier = require('../common/verifier')
+const { verifyEmail, verifyFirstName, verifyLastName, verifyPassword, verifyPhone } = require('../common/verifier')
 const bcrypt = require('bcrypt');
 
 module.exports.users = async(req, res) => {
@@ -9,17 +9,35 @@ module.exports.users = async(req, res) => {
         const { email, firstName, lastName, password, confirmPassword, phoneNumber } = req.body;
         console.log(email)
 
-        verifier.verifyEmail(email);
-        verifier.verifyFirstName(firstName);
-        verifier.verifyLastName(lastName);
-        verifier.verifyPassword(password, confirmPassword);
-        verifier.verifyPhone(phoneNumber);
+        let emailValidation = await verifyEmail(email);
+        if (emailValidation.message) { return res.status(400).json({ message: emailValidation.message }); }
 
+        let firstNameValidation = verifyFirstName(firstName);
+        if (firstNameValidation.message) {
+            return res.status(400).json({ message: firstNameValidation.message });
+
+        }
+        let lastNameValidation = verifyLastName(lastName);
+        if (lastNameValidation.message) {
+            return res.status(400).json({ message: lastNameValidation.message });
+
+        }
+
+        let passwordValidation = verifyPassword(password, confirmPassword);
+        if (passwordValidation.message) {
+            return res.status(400).json({ message: passwordValidation.message });
+
+        }
+        let phoneValidation = verifyPhone(phoneNumber);
+        if (phoneValidation.message) {
+            return res.status(400).json({ message: phoneValidation.message });
+
+        }
 
         const salt = await bcrypt.genSalt(Number(10));
         const hashedPassword = await bcrypt.hash(password, salt);
         await new User({...req.body, password: hashedPassword }).save();
-        //nodemailer
+
         let mailer = nodemailer.createTransport({
             service: 'gmail',
             auth: {
@@ -32,7 +50,7 @@ module.exports.users = async(req, res) => {
             from: process.env.SMTP_USER,
             to: email,
             subject: `Welcome on board ${firstName}`,
-            text: 'Hi there and welcome'
+            text: 'Hi there and welcome to HOPP Softwares Inc. We are glad to have you on board. We hope you enjoy your stay with us.'
 
         }
         mailer.sendMail(details, (err, info) => {
@@ -44,6 +62,7 @@ module.exports.users = async(req, res) => {
         })
 
         res.status(200).json({ message: 'email sent' })
+
 
     } catch (err) {
         res.status(500).send('Something went wrong');
