@@ -1,10 +1,16 @@
 //Defines control logic for creating new users
 const User = require('../models/user');
 const nodemailer = require('nodemailer');
-const { verifyEmail, verifyFirstName, verifyLastName, verifyPassword, verifyPhone } = require('../common/verifier');
+const { verifyEmail, 
+    verifyFirstName,
+     verifyLastName,
+     verifyPassword, 
+     verifyPhone } = require('../common/verifier');
 const bcrypt = require('bcrypt');
+const ApiError = require('../middleware/error')
 
-module.exports.users = async(req, res) => {
+
+module.exports.users = async(req, res,next) => {
     try {
         const { email, firstName, lastName, password, confirmPassword, phoneNumber } = req.body;
         console.log(email)
@@ -39,6 +45,8 @@ module.exports.users = async(req, res) => {
         const regs = await new User({...req.body, password: hashedPassword }).save();
         regs.confirmPassword = null;
         console.log(regs)
+
+        //node mailer
         let mailer = nodemailer.createTransport({
             service: 'gmail',
             auth: {
@@ -66,8 +74,7 @@ module.exports.users = async(req, res) => {
 
 
     } catch (err) {
-        res.status(500).send('Something went wrong');
-        console.warn(err);
+       next(ApiError.internalServerError(err.message))
     }
 
 
