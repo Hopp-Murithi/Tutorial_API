@@ -33,6 +33,10 @@ const userSchema = new Schema({
         type: String,
         required: true,
         min: 5
+    },
+    deleted :{
+        type:Boolean,
+        default:false
     }
 });
 
