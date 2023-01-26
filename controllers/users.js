@@ -56,8 +56,6 @@ const createUser = async (req, res, next) => {
       confirmPassword: hashedPassword,
     }).save();
 
-    console.log(regs);
-
     //node mailer
     let mailer = nodemailer.createTransport({
       service: "gmail",
@@ -90,7 +88,8 @@ const createUser = async (req, res, next) => {
 const getUsers = async (req, res, next) => {
   try {
     const allUsers = await User.find();
-    res.send(allUsers);
+
+    res.json(allUsers);
   } catch (err) {
     next(ApiError.internalServerError(err.message));
   }
@@ -130,9 +129,7 @@ const deleteUser = async (req, res, next) => {
   try {
     await User.findOneAndUpdate({ _id: req.params._id }, { deleted: true });
 
-    const undeleted = await User.find({ deleted: false });
-    res.send(undeleted);
-    
+    return res.status(204).json({ message: "User deleted" });
   } catch (err) {
     next(ApiError.internalServerError(err.message));
   }

@@ -42,4 +42,7 @@ const userSchema = new Schema({
 
 const User = mongoose.model('User', userSchema);
 
+User.collection.createIndex({deleted:1});
+
+
 module.exports = User;

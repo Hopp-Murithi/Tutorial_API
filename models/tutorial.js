@@ -1,6 +1,5 @@
 //defines schema model for creating tutorials
 
-//defines schema model for creating users
 const mongoose = require('mongoose');
 const { Schema } = mongoose
 
@@ -11,19 +10,23 @@ const tutSchema = new Schema({
         min: 3,
         max: 255
     },
+    img:{
+        data:Buffer,
+        type:String,
+        required:true
+    },
     Author: {
         type: String,
         required: true,
         min: 3,
         max: 20
     },
-    tags: [{
+    tags:{
         type: String,
         required: true,   
-    }],
-    permalink: {
-        type: String
     },
+    permaLink:String,
+    
     postDate: {
         type: Date,
         default: Date.now
@@ -32,12 +35,8 @@ const tutSchema = new Schema({
         type: String,
         required: true,
         min: 5    
-    },
-    video:
-    {
-        data: Buffer,
-        contentType: String
     }
+    
 });
 
 const Tutorial = mongoose.model('Tutorial', tutSchema);
