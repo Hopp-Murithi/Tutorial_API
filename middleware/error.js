@@ -15,4 +15,7 @@ module.exports = class ApiError  {
   static forbidden(message) {
     return new ApiError(403, message);
   }
+  static notFound(message) {
+    return new ApiError(404, message);
+  }
 }
