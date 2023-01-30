@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose
 
 const tutSchema = new Schema({
-    Title: {
+    title: {
         type: String,
         required: true,
         min: 3,
@@ -15,7 +15,7 @@ const tutSchema = new Schema({
         type:String,
         required:true
     },
-    Author: {
+    author: {
         type: String,
         required: true,
         min: 3,
@@ -25,7 +25,6 @@ const tutSchema = new Schema({
         type: String,
         required: true,   
     },
-    permaLink:String,
     
     postDate: {
         type: Date,
