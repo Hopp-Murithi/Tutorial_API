@@ -50,7 +50,7 @@ const createUser = async (req, res, next) => {
 
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const regs = await new User({
+    await new User({
       ...req.body,
       password: hashedPassword,
       confirmPassword: hashedPassword,
