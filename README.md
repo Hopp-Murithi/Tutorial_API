@@ -9,4 +9,4 @@
 - [x] Create user registraion validation
 - [x] Implement email verification on registration
 - [x] Test for complete functionality.
-- [ ] Create Tutorials API 
+- [X] Create Tutorials API 
