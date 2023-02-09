@@ -4,10 +4,12 @@ const ApiError = require("../middleware/error");
 const Tutorial = require("../models/tutorialSchema");
 const {
   verifyTitle,
-  verifyContent,
   verifyTags,
+  verifyUrl,
+  verifyDescription,
+  verifyAuthor,
 } = require("../common/verifier");
-const auth = require("../helpers/jwt.helper");
+//const auth = require("../helpers/jwt.helper");
 
 const getTutorials = async (req, res, next) => {
   try {
@@ -25,27 +27,25 @@ const getOneTutorial = async (req, res, next) => {
     next(ApiError.notFound(err.message));
   }
 };
-const postTutorial = async (req, res, next) => {
+const createTutorial = async (req, res, next) => {
   try {
-    const {
-      title,
-      tags,
-      content,
-      author,
-      image,
-      videoUrl,
-      description,
-      postDate
-    } = req.body;
+    const { title, tags, author, description, url } = req.body;
+
+    console.log(title);
+
+    let descriptionValidation = await verifyDescription(description);
+    if (descriptionValidation.message) {
+      return res.status(400).json({ message: descriptionValidation.message });
+    }
 
     let titleValidation = verifyTitle(title);
     if (titleValidation.message) {
       return res.status(400).json({ message: titleValidation.message });
     }
 
-    let contentValidation = verifyContent(content);
-    if (contentValidation.message) {
-      return res.status(400).json({ message: contentValidation.message });
+    let urlValidation = verifyUrl(url);
+    if (urlValidation.message) {
+      return res.status(400).json({ message: urlValidation.message });
     }
 
     let tagValidation = verifyTags(tags);
@@ -53,21 +53,51 @@ const postTutorial = async (req, res, next) => {
       return res.status(400).json({ message: tagValidation.message });
     }
 
+    let authorValidation = verifyAuthor(author);
+    if (authorValidation.message) {
+      return res.status(400).json({ message: authorValidation.message });
+    }
+
+    const createdAt = Date.now(24 * 3600 * 1000);
+
     const tut = await new Tutorial({
-      title,
-      tags,
-      content,
-      author,
-      image,
-      videoUrl,
-      description,
-      postDate
+      ...req.body,
+      postDate: createdAt,
+      lastUpdate:createdAt
     }).save();
-    console.log(tut);
-    res.send(tut);
+    return res.status(201).json(tut);
   } catch (err) {
     next(ApiError.badRequest(err.message));
   }
 };
 
-module.exports = { getTutorials, getOneTutorial, postTutorial };
+const updateTutorial = async(req,res,next) =>{
+  try {
+    const addInfo = await Tutorial.findByIdAndUpdate(
+      req.params._id,
+      {
+        title: req.body.title,
+        url: req.body.url,
+        description: req.body.description,
+        lastUpdate:Date.now(24 * 3600 * 1000)
+      },
+      { new: true }
+    );
+
+    res.status(201).send(addInfo);
+  } catch (err) {
+    next(ApiError.badRequest(err.message));
+  }
+} 
+
+const deleteTutorial = async(req,res,next) =>{
+  try {
+    const tutorial = await Tutorial.findByIdAndRemove(req.params._id);
+    if (!tutorial) return res.status(404).send('Tutorial not found.');
+    res.status(204).send(tutorial);
+  } catch (err) {
+    next(ApiError.internalServerError(err.message));
+  }
+}
+
+module.exports = { getTutorials, getOneTutorial, createTutorial,updateTutorial,deleteTutorial };

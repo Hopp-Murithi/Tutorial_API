@@ -5,11 +5,15 @@ const router = express.Router();
 const {
   getTutorials,
   getOneTutorial,
-  postTutorial,
+  createTutorial,
+  updateTutorial,
+  deleteTutorial
 } = require("../controllers/tutorials");
 
-router.post("/", postTutorial);
+router.post("/",createTutorial);
 router.get("/", getTutorials);
 router.get("/:_id", getOneTutorial);
+router.put('/:_id', updateTutorial);
+router.delete("/:_id",deleteTutorial)
 
 module.exports = router;

@@ -69,7 +69,7 @@ const createUser = async (req, res, next) => {
       from: process.env.SMTP_USER,
       to: email,
       subject: `Welcome on board ${firstName} ${lastName}`,
-      text: "Hi there and welcome to HOPP Softwares Inc. We are glad to have you on board. We hope you enjoy your stay with us.",
+      text: "Hi there and welcome to Learn repo. We are glad to have you on board. We hope you benefit from our collection.",
     };
     mailer.sendMail(details, (err, info) => {
       if (err) {
@@ -119,7 +119,7 @@ const updateUser = async (req, res, next) => {
       { new: true }
     );
 
-    res.send(addInfo);
+    res.status(201).send(addInfo);
   } catch (err) {
     next(ApiError.badRequest(err.message));
   }
@@ -127,9 +127,13 @@ const updateUser = async (req, res, next) => {
 
 const deleteUser = async (req, res, next) => {
   try {
-    await User.findOneAndUpdate({ _id: req.params._id }, { deleted: true });
-
-    return res.status(204).json({ message: "User deleted" });
+    const deleted = await User.findByIdAndUpdate(
+      req.params._id,
+      { deleted: true },
+      { new: true }
+    );
+    if (!deleted) return res.status(404).send("User not found.");
+    res.status(201).send(deleted);
   } catch (err) {
     next(ApiError.internalServerError(err.message));
   }

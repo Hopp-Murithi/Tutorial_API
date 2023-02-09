@@ -17,8 +17,10 @@ module.exports = function(app) {
     app.use('/api/deleteUser', users)
 
     app.use('/api/getTutorials', tutorials);
-    app.use('/api/postTutorial', tutorials);
+    app.use('/api/createTutorial', tutorials);
     app.use('/api/getOneTutorial', tutorials);
+    app.use('/api/updateTutorial', tutorials);
+    app.use('/api/deleteTutorial', tutorials);
     app.use('/api/auth', auth);
 
     

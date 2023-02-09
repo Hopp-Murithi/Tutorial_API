@@ -1,5 +1,5 @@
 const user = require("../models/user");
-//const tutorial = require("../models/tutorial");
+const tutorial = require("../models/tutorialSchema.js");
 
 module.exports = {
   verifyEmail: async (email) => {
@@ -11,7 +11,7 @@ module.exports = {
     } else if (!emailRegex.test(email)) {
       return { message: "Invalid email" };
     } else if (emailExists) {
-      return { message: "Email already exists" };
+      return { message: `User ${email} already exists` };
     } else {
       return true;
     }
@@ -67,25 +67,42 @@ module.exports = {
     if (!title) {
       return { message: "A title is required" };
     } else if (title.length < 3) {
-      return { message: "The Title too short" };
+      return { message: "The title too short" };
     } else {
       return true;
     }
   },
-  verifyContent: (content) => {
-    if(!content) {
-        return {message:"The body of the tutorial is empty"}
-    } else if(content.length < 20) {
-        return{message:'Content of tutorial too short'}
-    }else {
-      return true;
-    }
-  },
-  verifyTags:(tags) =>{
-    if(!tags) {
-      return {message:'Please add atleast two tags to your tutorial'}
+
+  verifyTags: (tags) => {
+    if (!tags) {
+      return { message: "Please add atleast two tags to your tutorial" };
     } else {
       return true;
     }
-  }
+  },
+  verifyUrl: (url) => {
+    if (!url) {
+      return { message: "A url label is required" };
+    } else {
+      return true;
+    }
+  },
+  verifyDescription: async (description) => {
+    const exists = await tutorial.findOne({ description });
+
+    if (!description) {
+      return { message: "Please add a brief description about the tutorial" };
+    } else if (exists) {
+      return { message: "Tutorial already exists" };
+    } else {
+      return true;
+    }
+  },
+  verifyAuthor: (author) => {
+    if (!author) {
+      return { message: "Please add an author for this post" };
+    } else {
+      return true;
+    }
+  },
 };

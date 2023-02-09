@@ -9,11 +9,7 @@ const tutSchema = new Schema({
     required: true,
     min: 3,
   },
-  img: {
-    data: Buffer,
-    type: String,
-    required: true,
-  },
+
   author: {
     type: String,
     required: true,
@@ -24,21 +20,25 @@ const tutSchema = new Schema({
     type: String,
     required: true,
   },
-
-  postDate: {
-    type: Date,
-    default: Date.now,
-  },
-  content: {
+  url: {
     type: String,
     required: true,
-    min: 5,
+    min: 3,
   },
-  videoUrl: {
-    type: String,
+  postDate: {
+    type: Date,
+    required:true,
+    default: Date.now,
+  },
+  lastUpdate: {
+    type: Date,
+    required:true,
+    default: Date.now,
   },
   description: {
     type: String,
+    required: true,
+    min: 10,
   },
 });
 
