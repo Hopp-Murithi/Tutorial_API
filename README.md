@@ -12,3 +12,5 @@
 - [x] Implement email verification on registration
 - [x] Test for complete functionality.
 - [X] Create Tutorials API 
+- [ ] Implement authentication and authorization
+- [ ] Document API
