@@ -20,7 +20,7 @@ module.exports = {
     if (!firstName) {
       return { message: "First name is required" };
     } else if (firstName.length < 3 || firstName.length > 20) {
-      return { message: "length must be between 3 and 20 characters" };
+      return { message: "first name length must be between 3 and 20 characters" };
     } else {
       return true;
     }
@@ -29,7 +29,7 @@ module.exports = {
     if (!lastName) {
       return { message: "Last name is required" };
     } else if (lastName.length < 3 || lastName.length > 20) {
-      return { message: "length must be between 3 and 20 characters" };
+      return { message: "last name length must be between 3 and 20 characters" };
     } else {
       return true;
     }
@@ -52,13 +52,22 @@ module.exports = {
       return true;
     }
   },
-  verifyPhone: (phoneNumber) => {
-    let phoneRegex =
-      /^\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/;
-    if (!phoneNumber) {
-      return { message: "Phone number is required" };
-    } else if (!phoneRegex.test(phoneNumber)) {
-      return { message: "Please add a valid phone number" };
+  verifyUserName: async(userName) => {
+    const nameExists = await user.findOne({userName});
+
+    if (!userName) {
+      return { message: "A username is required" };
+    } else if (nameExists) {
+      return { message: "This username has been taken" };
+    } else if (userName.length < 3) {
+      return { message: "Username too short" };
+    }else {
+      return true;
+    }
+  },
+  verifyAvatar: (avatar) => {
+    if (!avatar) {
+      return { message: "An avatar is required" };
     } else {
       return true;
     }
@@ -67,11 +76,12 @@ module.exports = {
     if (!title) {
       return { message: "A title is required" };
     } else if (title.length < 3) {
-      return { message: "The title too short" };
+      return { message: "Title too short" };
     } else {
       return true;
     }
   },
+
 
   verifyTags: (tags) => {
     if (!tags) {

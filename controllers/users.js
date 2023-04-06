@@ -6,8 +6,10 @@ const {
   verifyFirstName,
   verifyLastName,
   verifyPassword,
-  verifyPhone,
+  verifyUserName,
+  verifyAvatar,
 } = require("../common/verifier");
+
 const bcrypt = require("bcrypt");
 const ApiError = require("../middleware/error");
 
@@ -19,7 +21,8 @@ const createUser = async (req, res, next) => {
       lastName,
       password,
       confirmPassword,
-      phoneNumber,
+      userName,
+      avatar,
     } = req.body;
     console.log(email);
 
@@ -41,20 +44,26 @@ const createUser = async (req, res, next) => {
     if (passwordValidation.message) {
       return res.status(400).json({ message: passwordValidation.message });
     }
-    let phoneValidation = verifyPhone(phoneNumber);
-    if (phoneValidation.message) {
-      return res.status(400).json({ message: phoneValidation.message });
+    let userNameValidation = await verifyUserName(userName);
+    if (userNameValidation.message) {
+      return res.status(400).json({ message: userNameValidation.message });
+    }
+
+    let avatarValidation = verifyAvatar(avatar);
+    if (avatarValidation.message) {
+      return res.status(400).json({ message: avatarValidation.message });
     }
 
     const salt = await bcrypt.genSalt(Number(10));
 
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    await new User({
+    const use = await new User({
       ...req.body,
       password: hashedPassword,
-      confirmPassword: hashedPassword,
+      confirmPassword: hashedPassword
     }).save();
+    console.log(use);
 
     //node mailer
     let mailer = nodemailer.createTransport({
