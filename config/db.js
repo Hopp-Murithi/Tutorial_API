@@ -10,5 +10,5 @@ const connectDatabase = () => {
             console.log(`MongoDB Database connected to host ${con.connection.port}`);
         });
 }
-
-module.exports = connectDatabase
+console.log(process.env.DB_LOCAL_URI)
+module.exports = connectDatabase;
