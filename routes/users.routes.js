@@ -11,4 +11,4 @@ router.get('/:_id', getOneUser);
 router.put('/:_id', updateUser);
 router.delete('/:_id', deleteUser);
 
-module.exports = router;``
+module.exports = router;
