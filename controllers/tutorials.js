@@ -58,7 +58,7 @@ const createTutorial = async (req, res, next) => {
       return res.status(400).json({ message: authorValidation.message });
     }
 
-    const createdAt = Date.now(24 * 3600 * 1000);
+    const createdAt = Date.now();
 
     const tut = await new Tutorial({
       ...req.body,
@@ -79,7 +79,7 @@ const updateTutorial = async(req,res,next) =>{
         title: req.body.title,
         url: req.body.url,
         description: req.body.description,
-        lastUpdate:Date.now(24 * 3600 * 1000)
+        lastUpdate:Date.now()
       },
       { new: true }
     );

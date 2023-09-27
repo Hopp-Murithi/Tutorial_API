@@ -56,6 +56,9 @@ const createUser = async (req, res, next) => {
       confirmPassword: hashedPassword,
     }).save();
 
+
+  
+
     //node mailer
     let mailer = nodemailer.createTransport({
       service: "gmail",
